@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_javadeep" default="compile.module.javadeep">
+  <dirname property="module.javadeep.basedir" file="${ant.file.module_javadeep}"/>
+  
+  <property name="module.jdk.home.javadeep" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.javadeep" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.javadeep" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.javadeep" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="javadeep.output.dir" value="${module.javadeep.basedir}/out/production/javadeep"/>
+  <property name="javadeep.testoutput.dir" value="${module.javadeep.basedir}/out/test/javadeep"/>
+  
+  <path id="javadeep.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="javadeep.module.production.classpath">
+    <path refid="${module.jdk.classpath.javadeep}"/>
+  </path>
+  
+  <path id="javadeep.runtime.production.module.classpath">
+    <pathelement location="${javadeep.output.dir}"/>
+  </path>
+  
+  <path id="javadeep.module.classpath">
+    <path refid="${module.jdk.classpath.javadeep}"/>
+    <pathelement location="${javadeep.output.dir}"/>
+  </path>
+  
+  <path id="javadeep.runtime.module.classpath">
+    <pathelement location="${javadeep.testoutput.dir}"/>
+    <pathelement location="${javadeep.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.javadeep">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.javadeep">
+    <patternset refid="excluded.from.module.javadeep"/>
+  </patternset>
+  
+  <path id="javadeep.module.sourcepath">
+    <dirset dir="${module.javadeep.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.javadeep" depends="compile.module.javadeep.production,compile.module.javadeep.tests" description="Compile module javadeep"/>
+  
+  <target name="compile.module.javadeep.production" depends="register.custom.compilers" description="Compile module javadeep; production classes">
+    <mkdir dir="${javadeep.output.dir}"/>
+    <javac2 destdir="${javadeep.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.javadeep}/javac">
+      <compilerarg line="${compiler.args.javadeep}"/>
+      <bootclasspath refid="javadeep.module.bootclasspath"/>
+      <classpath refid="javadeep.module.production.classpath"/>
+      <src refid="javadeep.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.javadeep"/>
+    </javac2>
+    
+    <copy todir="${javadeep.output.dir}">
+      <fileset dir="${module.javadeep.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.javadeep.tests" depends="register.custom.compilers,compile.module.javadeep.production" description="compile module javadeep; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.javadeep" description="cleanup module">
+    <delete dir="${javadeep.output.dir}"/>
+    <delete dir="${javadeep.testoutput.dir}"/>
+  </target>
+</project>
