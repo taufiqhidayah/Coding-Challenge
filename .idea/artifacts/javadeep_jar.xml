@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="javadeep:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/javadeep_jar</output-path>
+    <root id="archive" name="javadeep.jar">
+      <element id="module-output" name="javadeep" />
+    </root>
+  </artifact>
+</component>
